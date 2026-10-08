@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BlackJack/BlackJack.csproj" />
+  <Project Path="BlackJackTests/BlackJackTests.csproj" Id="fd7f2b4f-e444-4a77-9f68-d71ae274cb60" />
+</Solution>
