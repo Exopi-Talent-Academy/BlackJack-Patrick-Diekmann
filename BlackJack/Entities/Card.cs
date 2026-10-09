@@ -38,7 +38,7 @@
 
         public int GetValue()
         {
-            switch (this.rank)
+            switch (rank)
             {
                 case Rank.Two:
                     return 2;
@@ -80,13 +80,13 @@
 
         public override string ToString()
         {
-            if (this.rank == Rank.Ace)
+            if (rank == Rank.Ace)
             {
-                return $"Ace of {this.suit}";
+                return $"Ace of {suit}";
             }
             else
             {
-                return $"{this.GetValue()} of {this.suit}";
+                return $"{GetValue()} of {suit}";
             }
         }
     }

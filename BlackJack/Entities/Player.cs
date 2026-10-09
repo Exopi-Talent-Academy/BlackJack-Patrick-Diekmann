@@ -11,7 +11,7 @@ namespace BlackJack.Entities
         public string name { get; private set; }
         public List<Card> hand { get; private set; }
         public int handValue { get; set; }
-        public int chips { get; set; } = 4;
+        public int chips { get; set; } = 50;
 
         public Player(string name)
         {
@@ -20,32 +20,28 @@ namespace BlackJack.Entities
             this.handValue = 0;
         }
 
-        public void ResetHand(DiscardPile discardPile)
+        public void ResetHand()
         {
-            if(this.hand.Count > 0)
-            {
-                discardPile.AddCards(this.hand);
-            }
-            this.handValue = 0;
-            this.hand.Clear();
+            handValue = 0;
+            hand.Clear();
         }
 
         public void NewHand(List<Card> cards)
         {
-            this.hand = new List<Card>(cards);
-            this.handValue = this.GetHandValue();
+            hand = new List<Card>(cards);
+            handValue = GetHandValue();
         }
 
         public void Hit(Card card)
         {
-            this.hand.Add(card);
+            hand.Add(card);
         }
 
         public int GetHandValue()
         {
             int value = 0;
             int aceCount = 0;
-            foreach (Card card in this.hand)
+            foreach (Card card in hand)
             {
                 value += card.GetValue();
                 if (card.rank == Card.Rank.Ace)
@@ -54,12 +50,12 @@ namespace BlackJack.Entities
                 }
             }
 
-            // Save for later maybe
-            //while (value > 21 && aceCount > 0)
-            //{
-            //    value -= 10;
-            //    aceCount--;
-            //}
+            //Save for later maybe
+            while (value > 21 && aceCount > 0)
+            {
+                value -= 10;
+                aceCount--;
+            }
 
             return value;
         }
@@ -67,20 +63,20 @@ namespace BlackJack.Entities
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Player: {this.name}");
-            sb.AppendLine($"Chips: {this.chips}");
+            sb.AppendLine($"Player: {name}");
+            sb.AppendLine($"Chips: {chips}");
             sb.AppendLine("Hand:");
-            foreach (Card card in this.hand)
+            foreach (Card card in hand)
             {
                 sb.AppendLine(card.ToString());
             }
-            sb.AppendLine($"Total Value: {this.GetHandValue()}");
+            sb.AppendLine($"Total Value: {GetHandValue()}");
             return sb.ToString();
         }
 
-        public int TakeTurn(Shoe shoe, Player player, DiscardPile discardPile)
+        public int TakeTurn(Shoe shoe, Player player)
         {
-            this.chips -= 1;
+            chips -= 1;
             while (true)
             {
                 Console.WriteLine($"Player {player.name}'s turn:");
@@ -93,7 +89,7 @@ namespace BlackJack.Entities
                 {
                     Console.Clear();
                     Console.WriteLine("Hit me! \n");
-                    Card newCard = shoe.GetCards(1, discardPile)[0];
+                    Card newCard = shoe.GetCards(1)[0];
                     player.Hit(newCard);
                     Console.WriteLine($"You drew: {newCard}");
                     player.handValue += newCard.GetValue();
@@ -121,7 +117,7 @@ namespace BlackJack.Entities
 
         public bool HasBlackJack()
         {
-            return this.hand.Count == 2 && this.GetHandValue() == 21;
+            return hand.Count == 2 && GetHandValue() == 21;
         }
     }
 }

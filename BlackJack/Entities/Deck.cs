@@ -30,18 +30,18 @@ namespace BlackJack.Entities
                 throw new EmptyDeckException("No cards left in the deck.");
             }
             Random random = new Random();
-            int index = random.Next(this.cards.Count);
-            Card card = this.cards[index];
-            this.cards.RemoveAt(index);
+            int index = random.Next(cards.Count);
+            Card card = cards[index];
+            cards.RemoveAt(index);
             return card;
         }
 
         public void printDeck()
         {
-            foreach (Card card in this.cards)
+            foreach (Card card in cards)
             {
                 Console.WriteLine(card.ToString());
             }
-        }   
+        }
     }
 }

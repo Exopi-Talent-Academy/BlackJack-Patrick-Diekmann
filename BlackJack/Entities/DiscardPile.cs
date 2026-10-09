@@ -15,7 +15,7 @@ namespace BlackJack.Entities
 
         public void AddCards(List<Card> cards)
         {
-            this.cards.AddRange(cards);
+            cards.AddRange(cards);
         }
 
     }

@@ -11,8 +11,8 @@ namespace BlackJack.Entities
 
         public (bool, List<Player>) DetermineWinners(Dealer dealer, List<Player> players)
         {
-            this.winningPlayers = new List<Player>();
-            this.dealerWon = false;
+            winningPlayers = new List<Player>();
+            dealerWon = false;
             int dealerHandValue = dealer.GetHandValue();
             foreach (Player player in players)
             {
@@ -25,7 +25,7 @@ namespace BlackJack.Entities
                 else if (dealerHandValue > 21 || playerHandValue > dealerHandValue)
                 {
                     // Dealer busts or player has a higher hand value, player wins
-                    this.winningPlayers.Add(player);
+                    winningPlayers.Add(player);
                 }
                 else if (playerHandValue == dealerHandValue)
                 {
@@ -35,10 +35,10 @@ namespace BlackJack.Entities
                 else
                 {
                     // Dealer has a higher hand value, dealer wins
-                    this.dealerWon = true;
+                    dealerWon = true;
                 }
             }
-            return (this.dealerWon, this.winningPlayers);
+            return (dealerWon, winningPlayers);
         }
     }
 }

@@ -1,63 +1,57 @@
-﻿using BlackJack.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BlackJack.Entities
+﻿namespace BlackJack.Entities
 {
     public class Shoe
     {
-        public List<Deck> decks { get; private set; }
-
+        public List<Card> cards { get; private set; }
 
         public Shoe(int numberOfDecks = 1)
         {
-            this.decks = new List<Deck>();
+            this.cards = new List<Card>();
             for (int i = 0; i < numberOfDecks; i++)
             {
-                this.decks.Add(new Deck());
-            }
-        }
-
-        public List<Card> GetCards(int numberOfCards, DiscardPile discardPile)
-        {
-            List<Card> cards = new List<Card>();
-            for (int i = 0; i < numberOfCards; i++)
-            {
-                try
+                foreach (Card.Suit suit in Enum.GetValues(typeof(Card.Suit)))
                 {
-                    if (this.decks.Count == 0)
+                    foreach (Card.Rank rank in Enum.GetValues(typeof(Card.Rank)))
                     {
-                        throw new EmptyShoeException("No more cards in the shoe.");
+                        this.cards.Add(new Card(suit, rank));
                     }
-                    Deck deck = this.decks[0];
-                    Card card = deck.GetCard();
-                    cards.Add(card);
                 }
-                catch (EmptyDeckException)
-                {
-                    this.decks.RemoveAt(0);
-                    Console.WriteLine("A deck has been popped");
-                    i--; // Retry drawing a card from the next deck
-                }
-                catch (EmptyShoeException)
-                {
-                    // WE ARE STILL MISSING SOME REFERENCES WHERE WE NEED THE DISCARD PILE. FOLLOW THE RABBIT HOLE
-                    i--; // Exit the loop if the shoe is empty
-                }
-
-
-
             }
-            return cards;
         }
 
-        public void ResetShoe(int numberOfDecks = 1)
+        public List<Card> GetCards(int numberOfCards = 1)
         {
-            this.decks.Clear();
-            for (int i = 0; i < numberOfDecks; i++)
+            List<Card> cardsDealt = new List<Card>();
+            try
             {
-                this.decks.Add(new Deck());
+                // add first card in cards to cardsDealt and remove it from cards, repeat for numberOfCards times
+                for (int i = 0; i < numberOfCards; i++)
+                {
+                    cardsDealt.Add(cards[0]);
+                    cards.RemoveAt(0);
+                }
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Shoe is empty");
+            }
+
+
+            return cardsDealt;
+        }
+
+        public void ResetShoe(DiscardPile discardPile)
+        {
+            foreach(Card card in cards)
+            {
+                discardPile.cards.Add(card);
+            }
+            cards.Clear();
+            foreach (Card card in discardPile.cards)
+            {
+                cards.Add(card);
             }
         }
+    }
 }

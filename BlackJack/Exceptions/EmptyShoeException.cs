@@ -15,4 +15,5 @@ namespace BlackJack.Exceptions
         public EmptyShoeException(string message, Exception innerException) : base(message, innerException)
         {
         }
+    }
 }

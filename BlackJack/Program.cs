@@ -34,35 +34,6 @@ namespace BlackJack
             }
 
         }
-        //static void Main(string[] args)
-        //{
 
-        //    while (true)
-        //    {
-        //        Console.WriteLine("Please enter the amount of players for this game:");
-        //        int input = Convert.ToInt32(Console.ReadLine());
-        //        Console.WriteLine($"You entered: {input}");
-
-        //        List<Player> players = new List<Player>();
-        //        for (int i = 0; i < input; i++)
-        //        {
-        //            Console.WriteLine($"Please enter the name of player {i + 1}:");
-        //            string playerName = Console.ReadLine();
-        //            Player player = new Player(playerName);
-        //            players.Add(player);
-        //            Console.WriteLine();
-        //        }
-
-        //        GameHandler gameHandler = new GameHandler(players);
-        //        gameHandler.StartGame();
-
-        //        char playAgain = ConsolePrinter.AskPlayAgain();
-        //        if (playAgain != 'y')
-        //        {
-        //            break;
-        //        }
-        //    }
-
-        //}
     }
 }

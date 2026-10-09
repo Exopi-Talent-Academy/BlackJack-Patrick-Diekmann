@@ -1,6 +1,5 @@
 ﻿using BlackJack.Entities;
 using BlackJack.HelperFunctions;
-using System.Security.AccessControl;
 
 namespace BlackJack
 {
@@ -28,29 +27,28 @@ namespace BlackJack
         public bool StartGame()
         {
             List<Player> playerResults = new List<Player>();
-
+            EnsureShoeHasEnoughCards();
             // Deal initial hands to players and the dealer
-            for (int i = 0; i < this.players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                this.players[i].ResetHand(this.gameState.discardPile);
-                List<Card> initialHand = this.shoe.GetCards(2, this.gameState.discardPile);
-                this.players[i].NewHand(initialHand);
-                this.players[i].handValue = this.players[i].GetHandValue();
+                List<Card> initialHand = shoe.GetCards(2);
+                players[i].NewHand(initialHand);
+                players[i].handValue = players[i].GetHandValue();
             }
-            this.dealer.NewHand(this.shoe.GetCards(2, this.gameState.discardPile));
+            dealer.NewHand(shoe.GetCards(2));
 
             // Each player's turn: loop until they stand or bust
-            for (int i = 0; i < this.players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                Player player = this.players[i];
-                if(player.chips <= 0)
+                Player player = players[i];
+                if (player.chips <= 0)
                 {
                     ConsolePrinter.PrintNoChipsMessage(player.name);
-                    this.players.Remove(player);
+                    players.Remove(player);
                     i--;
                     continue;
                 }
-                int playerHandValue = player.TakeTurn(shoe, player, this.gameState.discardPile);
+                int playerHandValue = player.TakeTurn(shoe, player);
                 if (!(playerHandValue > 21))
                 {
                     playerResults.Add(player);
@@ -59,7 +57,7 @@ namespace BlackJack
             }
 
             // Dealer's turn: loop until they reach 17 or higher
-            int dealerHandValue = dealer.TakeTurn(shoe, playerResults, this.gameState.discardPile);
+            int dealerHandValue = dealer.TakeTurn(shoe, playerResults);
             if (dealerHandValue > 21)
             {
                 ConsolePrinter.PrintBustedMessage(dealer.name, dealerHandValue);
@@ -98,15 +96,35 @@ namespace BlackJack
                 }
 
             }
+
+            // Hand is over and we add all players' hands and the dealer's hand to the discard pile
+            foreach (Player player in players)
+            {
+                gameState.discardPile.AddCards(player.hand);
+                player.ResetHand();
+            }
+            gameState.discardPile.AddCards(dealer.hand);
+            dealer.ResetHand();
+
             return true;
+        }
+
+        public void EnsureShoeHasEnoughCards()
+        {
+            // player count + dealer count * 4. It aint perfect but its a fix for now
+            if (shoe.cards.Count < (players.Count + 1) * 4)
+            {
+                shoe.ResetShoe(gameState.discardPile);
+                gameState.discardPile.cards.Clear();
+            }
         }
 
         public GameState EndGame()
         {
-            this.gameState.players = this.players;
-            this.gameState.dealer = this.dealer;
-            this.gameState.shoe = this.shoe;
-            return this.gameState;
+            gameState.players = players;
+            gameState.dealer = dealer;
+            gameState.shoe = shoe;
+            return gameState;
         }
 
 
