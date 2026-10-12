@@ -81,7 +81,7 @@ namespace BlackJack.Entities
             {
                 Console.WriteLine($"Player {player.name}'s turn:");
                 Console.WriteLine(player.ToString());
-                Console.WriteLine("Do you want to hit or stand? (h/s)");
+                Console.WriteLine("Do you want to hit or stand? (h/s) \n");
 
                 char input = char.ToLower(Console.ReadKey(true).KeyChar);
 
